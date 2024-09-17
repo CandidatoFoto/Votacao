@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votação - Prefeito</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eaeaea;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+        input[type="text"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .candidate-info {
+            margin-top: 20px;
+            display: none;
+        }
+        .candidate-info img {
+            max-width: 100%;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Votação - Prefeito</h1>
+        <input type="text" id="numeroPrefeito" placeholder="Digite o número do prefeito">
+        <button onclick="showCandidateInfo()">OK</button>
+
+        <div class="candidate-info" id="candidateInfo">
+            <h2 id="candidateName">Nome do Candidato</h2>
+            <img id="candidatePhoto" src="" alt="Foto do Candidato">
+            <p id="candidateNumber">Número: </p>
+            <button onclick="confirmVote()">Confirmar Voto</button>
+        </div>
+    </div>
+
+    <script>
+        function showCandidateInfo() {
+            const numero = document.getElementById('numeroPrefeito').value;
+            const candidato = JSON.parse(localStorage.getItem('candidatos')).find(c => c.numero === numero && c.cargo === 'prefeito');
+
+            if (candidato) {
+                document.getElementById('candidateName').innerText = `Nome: ${candidato.nome}`;
+                document.getElementById('candidatePhoto').src = candidato.foto || 'default.jpg'; // Use uma foto padrão se não houver uma específica
+                document.getElementById('candidateNumber').innerText = `Número: ${candidato.numero}`;
+                document.getElementById('candidateInfo').style.display = 'block';
+            } else {
+                alert('Candidato não encontrado.');
+            }
+        }
+
+        function confirmVote() {
+            const numero = document.getElementById('numeroPrefeito').value;
+            let candidatos = JSON.parse(localStorage.getItem('candidatos'));
+            candidatos = candidatos.map(candidato => {
+                if (candidato.numero === numero && candidato.cargo === 'prefeito') {
+                    candidato.votos += 1;
+                }
+                return candidato;
+            });
+            localStorage.setItem('candidatos', JSON.stringify(candidatos));
+
+            // Marca que o dispositivo já votou
+            localStorage.setItem('votou', 'true');
+
+            window.location.href = 'resultados.html'; // Redireciona para a página de resultados
+        }
+
+        // Verifica se o dispositivo já votou
+        if (localStorage.getItem('votou') === 'true') {
+            window.location.href = 'resultados.html'; // Redireciona para a página de resultados
+        }
+    </script>
+</body>
+</html>

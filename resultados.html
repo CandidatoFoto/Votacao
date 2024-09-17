@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados da Votação</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .foto-candidato {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .foto-candidato {
+                width: 40px;
+                height: 40px;
+            }
+            th, td {
+                padding: 10px;
+            }
+            table {
+                margin-top: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            .foto-candidato {
+                width: 30px;
+                height: 30px;
+            }
+            th, td {
+                padding: 8px;
+                font-size: 14px;
+            }
+            table {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resultados da Votação</h1>
+        <h2>Candidatos a Prefeito</h2>
+        <table id="resultadosPrefeitos">
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>Número</th>
+                    <th>Votos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dados dos prefeitos serão inseridos aqui pelo script -->
+            </tbody>
+        </table>
+        <h2>Candidatos a Vereador</h2>
+        <table id="resultadosVereadores">
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>Número</th>
+                    <th>Votos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dados dos vereadores serão inseridos aqui pelo script -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function mostrarResultados() {
+            const candidatos = JSON.parse(localStorage.getItem('candidatos')) || [];
+
+            const resultadosVereadores = candidatos.filter(c => c.cargo === 'vereador').sort((a, b) => a.nome.localeCompare(b.nome));
+            const resultadosPrefeitos = candidatos.filter(c => c.cargo === 'prefeito').sort((a, b) => a.nome.localeCompare(b.nome));
+
+            const tabelaVereadores = document.getElementById('resultadosVereadores').getElementsByTagName('tbody')[0];
+            const tabelaPrefeitos = document.getElementById('resultadosPrefeitos').getElementsByTagName('tbody')[0];
+
+            resultadosVereadores.forEach(candidato => {
+                const linha = tabelaVereadores.insertRow();
+                linha.insertCell().innerHTML = `<img src="${candidato.foto}" alt="Foto do candidato" class="foto-candidato">`;
+                linha.insertCell().innerText = candidato.nome;
+                linha.insertCell().innerText = candidato.numero;
+                linha.insertCell().innerText = candidato.votos;
+            });
+
+            resultadosPrefeitos.forEach(candidato => {
+                const linha = tabelaPrefeitos.insertRow();
+                linha.insertCell().innerHTML = `<img src="${candidato.foto}" alt="Foto do candidato" class="foto-candidato">`;
+                linha.insertCell().innerText = candidato.nome;
+                linha.insertCell().innerText = candidato.numero;
+                linha.insertCell().innerText = candidato.votos;
+            });
+        }
+
+        mostrarResultados();
+    </script>
+</body>
+</html>

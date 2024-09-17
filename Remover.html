@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração - Remover Candidato</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        input[type="text"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 20px;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Remover Candidato</h1>
+        <form id="removeCandidateForm">
+            <label for="numero">Número do Candidato:</label>
+            <input type="text" id="numero" placeholder="Número do candidato" required>
+            <button type="submit">Remover Candidato</button>
+        </form>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('removeCandidateForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const numero = document.getElementById('numero').value;
+
+            const candidatos = JSON.parse(localStorage.getItem('candidatos')) || [];
+            
+            // Encontrar o índice do candidato a ser removido
+            const index = candidatos.findIndex(c => c.numero === numero);
+            
+            if (index === -1) {
+                document.getElementById('message').innerText = 'Nenhum candidato encontrado com esse número.';
+                return;
+            }
+
+            // Remover o candidato do array
+            candidatos.splice(index, 1);
+
+            // Atualizar o localStorage
+            localStorage.setItem('candidatos', JSON.stringify(candidatos));
+
+            document.getElementById('message').innerText = 'Candidato removido com sucesso!';
+            document.getElementById('removeCandidateForm').reset();
+        });
+    </script>
+</body>
+</html>
